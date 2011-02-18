@@ -46,8 +46,12 @@ handle_info({nodeup, Node}, StateName, State)
 handle_info({nodedown, Node}, connected, State)
   when Node =:= State#state.contact ->
     disconnected(State);
+handle_info(_, firstconnect, State) ->
+    {next_state, firstconnect, State, State#state.initial_timeout};
+handle_info(_, connected, State) ->
+    {next_state, connected, State, hibernate};
 handle_info(_, StateName, State) ->
-    {next_state, StateName, State}.
+    {next_state, StateName, State, State#state.timeout}.
 
 connected(State) ->
     gen_fsm:send_event(link_fsm, {connected, State#state.contact}),
