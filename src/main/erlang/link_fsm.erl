@@ -25,14 +25,14 @@ drop_ref(Contact, State) ->
 	       end,
     State#state{contacts=Contacts}.
 
-disconnected({connection, Contact}, State) ->
+disconnected({connected, Contact}, State) ->
     error_logger:info_msg("Agent-Link: Connected"),
     gen_event:notify(agent_link_events, connected),
     {next_state, marginally_connected, add_ref(Contact, State)}.
 
-marginally_connected({connection, Contact}, State) ->
+marginally_connected({connected, Contact}, State) ->
     {next_state, solidly_connected, add_ref(Contact, State)};
-marginally_connected({disconnection, Contact}, State) ->
+marginally_connected({disconnected, Contact}, State) ->
     NewState = drop_ref(Contact, State),
     case sets:size(NewState#state.contacts) of
 	0 ->
@@ -43,9 +43,9 @@ marginally_connected({disconnection, Contact}, State) ->
 	    throw({illegal_refs, Refs})
     end.
 
-solidly_connected({connection, Contact}, State) ->
+solidly_connected({connected, Contact}, State) ->
     {next_state, solidly_connected, add_ref(Contact, State)};
-solidly_connected({disconnection, Contact}, State) ->
+solidly_connected({disconnected, Contact}, State) ->
     NewState = drop_ref(Contact, State),
     case sets:size(NewState#state.contacts) of
 	0 ->
