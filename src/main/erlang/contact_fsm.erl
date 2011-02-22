@@ -58,8 +58,9 @@ connected(State) ->
     {next_state, connected, State, hibernate}.
 
 disconnected(State) ->
-    gen_fsm:send_event(link_fsm, {disconnected, State#state.contact}),
+    gen_fsm:send_event(link_fsm, {disconnected, disconnected, State#state.contact}),
     connect(State).
 
-terminate(_Reason, _State, _Data) ->
+terminate(_Reason, State, _Data) ->
+    gen_fsm:send_event(link_fsm, {disconnected, terminated, State#state.contact}),
     void.

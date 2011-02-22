@@ -32,7 +32,7 @@ disconnected({connected, Contact}, State) ->
 
 marginally_connected({connected, Contact}, State) ->
     {next_state, solidly_connected, add_ref(Contact, State)};
-marginally_connected({disconnected, Contact}, State) ->
+marginally_connected({disconnected, _Reason, Contact}, State) ->
     NewState = drop_ref(Contact, State),
     case sets:size(NewState#state.contacts) of
 	0 ->
@@ -45,7 +45,7 @@ marginally_connected({disconnected, Contact}, State) ->
 
 solidly_connected({connected, Contact}, State) ->
     {next_state, solidly_connected, add_ref(Contact, State)};
-solidly_connected({disconnected, Contact}, State) ->
+solidly_connected({disconnected, _Reason, Contact}, State) ->
     NewState = drop_ref(Contact, State),
     case sets:size(NewState#state.contacts) of
 	0 ->
