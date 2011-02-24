@@ -1,6 +1,6 @@
 -module(agent_link).
 
--export([add_contact/1, remove_contact/1]).
+-export([add_contact/1, remove_contact/1, get_state/0]).
 
 add_contact(Contact) ->
     Spec = {Contact,
@@ -15,4 +15,8 @@ add_contact(Contact) ->
 remove_contact(Contact) ->
     ok = supervisor:terminate_child(agent_link_sup, Contact),
     supervisor:delete_child(agent_link_sup, Contact).
+
+get_state() ->
+    link_fsm:get_state().
+
     
