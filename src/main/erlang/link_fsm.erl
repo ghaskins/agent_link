@@ -26,7 +26,7 @@ drop_ref(Contact, State) ->
     State#state{contacts=Contacts}.
 
 disconnected({connected, Contact}, State) ->
-    error_logger:info_msg("Agent-Link: Connected"),
+    error_logger:info_msg("Agent-Link: Connected~n"),
     gen_event:notify(agent_link_events, connected),
     {next_state, marginally_connected, add_ref(Contact, State)}.
 
@@ -36,7 +36,7 @@ marginally_connected({disconnected, _Reason, Contact}, State) ->
     NewState = drop_ref(Contact, State),
     case sets:size(NewState#state.contacts) of
 	0 ->
-	    error_logger:info_msg("Agent-Link: Disconnected"),
+	    error_logger:info_msg("Agent-Link: Disconnected~n"),
 	    gen_event:notify(agent_link_events, disconnected),
 	    {next_state, disconnected, NewState};
 	Refs ->
