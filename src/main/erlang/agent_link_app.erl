@@ -5,11 +5,12 @@
 -export([start/2, stop/1]).
 
 start(_Type, _StartArgs) ->
-    % FIXME
-    StartArgs = [{contacts, ["contact1@linux-mp", "contact2@linux-mp"]}],
 
     Contacts = [ list_to_atom(Contact) ||
-		   Contact <- proplists:get_value(contacts, StartArgs, [])
+		   Contact <- case application:get_env(contacts) of
+				  undefined -> [];
+				  {ok, Val} -> Val
+			      end
 	       ],
 
     agent_link_sup:start_link(Contacts).
