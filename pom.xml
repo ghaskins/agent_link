@@ -11,6 +11,21 @@
     <developerConnection>scm:git:ssh://151.155.230.1/lsg/git/agentlink</developerConnection>
   </scm>
 
+  <distributionManagement>
+    <!-- use the following if you're not using a snapshot version. -->
+    <repository>
+      <id>nexus</id>
+      <name>Nexus Releases</name>
+      <url>http://151.155.230.64:8081/nexus/content/repositories/releases</url>
+    </repository>
+    <!-- use the following if you ARE using a snapshot version. -->
+    <snapshotRepository>
+      <id>nexus</id>
+      <name>Nexus Snapshots</name>
+      <url>http://151.155.230.64:8081/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <build>
     <plugins>
       <plugin>
